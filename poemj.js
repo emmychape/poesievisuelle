@@ -184,3 +184,12 @@ saveBtn.onclick = () => {
   localStorage.setItem("compositions", JSON.stringify(compositions));
   alert("Composition sauvegardée dans l'archive.");
 };
+// À la fin du fichier, pour gérer la visibilité
+const generateBtn = document.getElementById("generateBtn");
+const modeSelect = document.getElementById("modeSelect");
+
+function updateGenerateVisibility() {
+  generateBtn.style.display = modeSelect.value === "forme" ? "inline-block" : "none";
+}
+window.addEventListener("DOMContentLoaded", updateGenerateVisibility);
+modeSelect.addEventListener("change", updateGenerateVisibility);
