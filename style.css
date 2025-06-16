@@ -331,3 +331,27 @@ body.delete-mode .grid-item {
   border: 2px dashed red;
   opacity: 0.8;
 }
+@media (max-width: 600px) {
+  #panel {
+    width: auto;
+    left: 5px;
+    right: 5px;
+    top: 5px;
+    padding: 10px;
+  }
+  #panel textarea,
+  #panel input,
+  #panel select {
+    font-size: 16px;
+  }
+  #panel button, #panel a {
+    width: 100%;
+    margin-top: 8px;
+  }
+}
+
+/* SVG canvas fills screen */
+#svgCanvas {
+  width: 100vw;
+  height: 100vh;
+}
