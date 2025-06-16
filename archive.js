@@ -5,8 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeModal = document.getElementById("closeModal");
   const exportModalBtn = document.getElementById("exportModalBtn");
   const deleteBtn = document.getElementById("deleteModeBtn");
-  const confirmDeleteBtn = document.getElementById("confirmDeleteBtn"); // à créer dans HTML
-  const generateBtn = document.getElementById("generateBtn"); // bouton "Générer"
 
   let deleteMode = false;
   let compositions = JSON.parse(localStorage.getItem("compositions") || "[]").sort(() => Math.random() - 0.5);
@@ -19,15 +17,8 @@ document.addEventListener("DOMContentLoaded", () => {
   compositions.forEach((comp, index) => {
     const div = document.createElement("div");
     div.className = "grid-item";
+    div.dataset.index = index;
 
-    // Checkbox pour sélection
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.className = "delete-checkbox hidden";
-    checkbox.dataset.index = index;
-    div.appendChild(checkbox);
-
-    // Crée la preview image
     const svgDoc = new DOMParser().parseFromString(comp.svg, "image/svg+xml").documentElement;
     const cloneSvg = svgDoc.cloneNode(true);
 
@@ -61,12 +52,9 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     img.src = url;
 
-    div.addEventListener("click", (e) => {
+    div.addEventListener("click", () => {
       if (deleteMode) {
-        // Ne rien faire sur click si en mode suppression, à part cocher
-        if (e.target !== checkbox) {
-          checkbox.checked = !checkbox.checked;
-        }
+        div.classList.toggle("selected");
         return;
       }
 
@@ -112,36 +100,23 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   deleteBtn.onclick = () => {
-    deleteMode = !deleteMode;
-    document.body.classList.toggle("delete-mode", deleteMode);
-    document.querySelectorAll(".delete-checkbox").forEach(cb => {
-      cb.classList.toggle("hidden", !deleteMode);
-      cb.checked = false;
-    });
+    if (!deleteMode) {
+      deleteMode = true;
+      document.body.classList.add("delete-mode");
+    } else {
+      const selectedItems = document.querySelectorAll(".grid-item.selected");
+      if (!selectedItems.length) {
+        deleteMode = false;
+        document.body.classList.remove("delete-mode");
+        return;
+      }
 
-    confirmDeleteBtn.style.display = deleteMode ? "inline-block" : "none";
-  };
-
-  confirmDeleteBtn.onclick = () => {
-    const checkedBoxes = document.querySelectorAll(".delete-checkbox:checked");
-    if (!checkedBoxes.length) return;
-
-    const indicesToDelete = [...checkedBoxes].map(cb => parseInt(cb.dataset.index));
-    compositions = compositions.filter((_, idx) => !indicesToDelete.includes(idx));
-    localStorage.setItem("compositions", JSON.stringify(compositions));
-    location.reload();
-  };
-
-  // Afficher/Masquer le bouton Générer selon mode
-  function switchMode(isForme) {
-    document.body.classList.toggle("mode-forme", isForme);
-    document.body.classList.toggle("mode-souris", !isForme);
-
-    if (generateBtn) {
-      generateBtn.style.display = isForme ? "block" : "none";
+      if (confirm("Supprimer les éléments sélectionnés ?")) {
+        const indices = Array.from(selectedItems).map(item => parseInt(item.dataset.index));
+        compositions = compositions.filter((_, idx) => !indices.includes(idx));
+        localStorage.setItem("compositions", JSON.stringify(compositions));
+        location.reload();
+      }
     }
-  }
-
-  // switchMode(true); // appel en forme
-  // switchMode(false); // appel en souris
+  };
 });
