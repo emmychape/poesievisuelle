@@ -327,3 +327,7 @@ body.delete-mode .grid-item {
     text-align: center;
   }
 }
+.grid-item.selected {
+  border: 2px dashed red;
+  opacity: 0.8;
+}
