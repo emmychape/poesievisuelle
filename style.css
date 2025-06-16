@@ -256,3 +256,74 @@ body.delete-mode .grid-item {
 .export-btn:hover {
   opacity: 1;
 }
+/* ===== NOUVEAUX ÉLÉMENTS POUR archive.html ===== */
+
+.mode-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.generate-btn {
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.generate-btn:hover {
+  background-color: #27ae60;
+}
+
+.confirm-delete-btn {
+  background-color: #e67e22;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.confirm-delete-btn:hover {
+  background-color: #d35400;
+}
+
+.delete-checkbox {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  width: 18px;
+  height: 18px;
+  accent-color: #e74c3c;
+}
+
+.delete-checkbox.hidden {
+  display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .archive-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .grid-container {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+
+  .confirm-delete-btn,
+  .global-delete,
+  .generate-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
