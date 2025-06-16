@@ -16,6 +16,15 @@ document.addEventListener("DOMContentLoaded", () => {
   let drawingTimeout = null;
   let lastDrawTime = 0;
 
+  // Adapte le SVG à la taille de la fenêtre
+  function resizeSVGToFit() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  }
+  window.addEventListener("resize", resizeSVGToFit);
+  resizeSVGToFit();
+
   function captureSettings() {
     return {
       text: textInput.value,
@@ -107,6 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   svg.addEventListener("mousemove", (e) => {
     if (modeSelect.value !== "souris") return;
+
     const now = Date.now();
     if (now - lastDrawTime < 30) return;
     lastDrawTime = now;
