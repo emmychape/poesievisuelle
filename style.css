@@ -382,3 +382,30 @@ html, body {
     padding: 10px;
   }
 }
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.confirm-delete {
+  background-color: #e67e22;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.confirm-delete:hover {
+  background-color: #d35400;
+}
+
+.confirm-delete.hidden {
+  display: none;
+}
+
+.grid-item.selected {
+  border: 2px dashed red;
+  opacity: 0.8;
+}
