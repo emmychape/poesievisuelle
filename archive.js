@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeModal = document.getElementById("closeModal");
   const exportModalBtn = document.getElementById("exportModalBtn");
   const deleteBtn = document.getElementById("deleteModeBtn");
+  const confirmDeleteBtn = document.getElementById("confirmDeleteBtn"); // à créer dans HTML
+  const generateBtn = document.getElementById("generateBtn"); // bouton "Générer"
 
   let deleteMode = false;
   let compositions = JSON.parse(localStorage.getItem("compositions") || "[]").sort(() => Math.random() - 0.5);
@@ -18,11 +20,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const div = document.createElement("div");
     div.className = "grid-item";
 
-    // Create preview (PNG) for the grid
+    // Checkbox pour sélection
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.className = "delete-checkbox hidden";
+    checkbox.dataset.index = index;
+    div.appendChild(checkbox);
+
+    // Crée la preview image
     const svgDoc = new DOMParser().parseFromString(comp.svg, "image/svg+xml").documentElement;
     const cloneSvg = svgDoc.cloneNode(true);
 
-    // Ensure viewBox exists
     if (!cloneSvg.getAttribute("viewBox")) {
       const width = cloneSvg.getAttribute("width") || "1000";
       const height = cloneSvg.getAttribute("height") || "1000";
@@ -36,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const blob = new Blob([serialized], { type: "image/svg+xml" });
     const url = URL.createObjectURL(blob);
     const img = new Image();
+
     img.onload = () => {
       const canvas = document.createElement("canvas");
       canvas.width = 150;
@@ -52,21 +61,19 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     img.src = url;
 
-    div.addEventListener("click", () => {
+    div.addEventListener("click", (e) => {
       if (deleteMode) {
-        if (confirm("Supprimer cette composition ?")) {
-          compositions.splice(index, 1);
-          localStorage.setItem("compositions", JSON.stringify(compositions));
-          location.reload();
+        // Ne rien faire sur click si en mode suppression, à part cocher
+        if (e.target !== checkbox) {
+          checkbox.checked = !checkbox.checked;
         }
         return;
       }
 
       modalSvgContainer.innerHTML = comp.svg;
-
       const svgEl = modalSvgContainer.querySelector("svg");
+
       if (svgEl) {
-        // Auto-add viewBox if missing
         if (!svgEl.getAttribute("viewBox")) {
           const width = svgEl.getAttribute("width") || "1000";
           const height = svgEl.getAttribute("height") || "1000";
@@ -76,7 +83,6 @@ document.addEventListener("DOMContentLoaded", () => {
         svgEl.removeAttribute("width");
         svgEl.removeAttribute("height");
         svgEl.setAttribute("preserveAspectRatio", "xMidYMid meet");
-
         svgEl.style.width = "100%";
         svgEl.style.height = "100%";
         svgEl.style.maxHeight = "100%";
@@ -108,5 +114,34 @@ document.addEventListener("DOMContentLoaded", () => {
   deleteBtn.onclick = () => {
     deleteMode = !deleteMode;
     document.body.classList.toggle("delete-mode", deleteMode);
+    document.querySelectorAll(".delete-checkbox").forEach(cb => {
+      cb.classList.toggle("hidden", !deleteMode);
+      cb.checked = false;
+    });
+
+    confirmDeleteBtn.style.display = deleteMode ? "inline-block" : "none";
   };
+
+  confirmDeleteBtn.onclick = () => {
+    const checkedBoxes = document.querySelectorAll(".delete-checkbox:checked");
+    if (!checkedBoxes.length) return;
+
+    const indicesToDelete = [...checkedBoxes].map(cb => parseInt(cb.dataset.index));
+    compositions = compositions.filter((_, idx) => !indicesToDelete.includes(idx));
+    localStorage.setItem("compositions", JSON.stringify(compositions));
+    location.reload();
+  };
+
+  // Afficher/Masquer le bouton Générer selon mode
+  function switchMode(isForme) {
+    document.body.classList.toggle("mode-forme", isForme);
+    document.body.classList.toggle("mode-souris", !isForme);
+
+    if (generateBtn) {
+      generateBtn.style.display = isForme ? "block" : "none";
+    }
+  }
+
+  // switchMode(true); // appel en forme
+  // switchMode(false); // appel en souris
 });
