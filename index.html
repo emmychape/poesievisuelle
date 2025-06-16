@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>Poésie Visuelle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://api.fontshare.com/v2/css?f[]=abc-diatype@700&display=swap" rel="stylesheet">
+  <link href="https://api.fontshare.com/v2/css?f[]=abc-diatype@700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -19,7 +19,9 @@
       <option value="souris">Souris</option>
       <option value="forme">Forme aléatoire</option>
     </select>
-   <button id="generateBtn">Générer</button>
+
+    <button id="generateBtn">Générer</button>
+
     <label>Forme :</label>
     <select id="shapeSelect">
       <option value="serpent">Serpent</option>
@@ -41,11 +43,14 @@
 
     <label>Espacement lettres :</label>
     <input type="number" id="letterSpacing" value="2" />
+
     <button id="clearBtn">Effacer</button>
     <button id="exportBtn">Exporter SVG</button>
     <button id="saveBtn">Sauvegarder</button>
+
     <a href="archive.html" id="archiveLink">Voir l'archive</a>
   </div>
+
   <svg id="svgCanvas"
        xmlns="http://www.w3.org/2000/svg"
        xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -53,6 +58,7 @@
 
   <script src="poemj.js"></script>
   <script>
+    // Rendre le panneau draggable
     function makeDraggable(el) {
       let isDragging = false, offsetX, offsetY;
       el.addEventListener('mousedown', (e) => {
@@ -73,6 +79,17 @@
     }
     document.addEventListener('DOMContentLoaded', () => {
       makeDraggable(document.getElementById('panel'));
+
+      // Cacher bouton générer si mode souris
+      const generateBtn = document.getElementById("generateBtn");
+      const modeSelect = document.getElementById("modeSelect");
+
+      function updateGenerateVisibility() {
+        generateBtn.style.display = (modeSelect.value === "forme") ? "inline-block" : "none";
+      }
+
+      updateGenerateVisibility();
+      modeSelect.addEventListener("change", updateGenerateVisibility);
     });
   </script>
 </body>
