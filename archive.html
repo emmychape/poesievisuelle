@@ -7,9 +7,12 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="archive-body">
- <header class="archive-header">
+<header class="archive-header">
   <a href="index.html" class="back-button">← Retour</a>
-  <button id="deleteModeBtn" class="global-delete">Supprimer</button>
+  <div class="action-buttons">
+    <button id="deleteModeBtn" class="global-delete">Supprimer</button>
+    <button id="confirmDeleteBtn" class="confirm-delete hidden">Confirmer</button>
+  </div>
 </header>
 
   <main id="archiveGrid" class="grid-container"></main>
