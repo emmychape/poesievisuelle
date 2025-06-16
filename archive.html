@@ -6,10 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="archive-body">
+<body class="archive-body mode-souris">
   <header class="archive-header">
     <a href="index.html" class="back-button">← Retour</a>
+    <div class="mode-controls">
+      <h2>Mode forme aléatoire</h2>
+      <button id="generateBtn" class="generate-btn" style="display:none;">Générer</button>
+    </div>
     <button id="deleteModeBtn" class="global-delete">Supprimer</button>
+    <button id="confirmDeleteBtn" class="confirm-delete-btn" style="display:none;">Confirmer la suppression</button>
   </header>
 
   <main id="archiveGrid" class="grid-container"></main>
