@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const deleteBtn = document.getElementById("deleteModeBtn");
 
   let deleteMode = false;
-  let compositions = JSON.parse(localStorage.getItem("compositions") || "[]").sort(() => Math.random() - 0.5);
+  let compositions = JSON.parse(localStorage.getItem("compositions") || "[]");
 
   if (!compositions.length) {
     archiveGrid.innerHTML = "<p style='text-align:center'>Aucune composition sauvegardée</p>";
@@ -20,18 +20,16 @@ document.addEventListener("DOMContentLoaded", () => {
     div.dataset.index = index;
 
     const svgDoc = new DOMParser().parseFromString(comp.svg, "image/svg+xml").documentElement;
-    const cloneSvg = svgDoc.cloneNode(true);
-
-    if (!cloneSvg.getAttribute("viewBox")) {
-      const width = cloneSvg.getAttribute("width") || "1000";
-      const height = cloneSvg.getAttribute("height") || "1000";
-      cloneSvg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+    if (!svgDoc.getAttribute("viewBox")) {
+      const width = svgDoc.getAttribute("width") || "1000";
+      const height = svgDoc.getAttribute("height") || "1000";
+      svgDoc.setAttribute("viewBox", `0 0 ${width} ${height}`);
     }
 
-    cloneSvg.setAttribute("width", "300");
-    cloneSvg.setAttribute("height", "300");
+    svgDoc.setAttribute("width", "300");
+    svgDoc.setAttribute("height", "300");
 
-    const serialized = new XMLSerializer().serializeToString(cloneSvg);
+    const serialized = new XMLSerializer().serializeToString(svgDoc);
     const blob = new Blob([serialized], { type: "image/svg+xml" });
     const url = URL.createObjectURL(blob);
     const img = new Image();
@@ -102,21 +100,29 @@ document.addEventListener("DOMContentLoaded", () => {
   deleteBtn.onclick = () => {
     if (!deleteMode) {
       deleteMode = true;
+      deleteBtn.textContent = "Annuler";
+      deleteBtn.classList.add("active-delete");
       document.body.classList.add("delete-mode");
     } else {
-      const selectedItems = document.querySelectorAll(".grid-item.selected");
-      if (!selectedItems.length) {
-        deleteMode = false;
-        document.body.classList.remove("delete-mode");
-        return;
-      }
-
-      if (confirm("Supprimer les éléments sélectionnés ?")) {
-        const indices = Array.from(selectedItems).map(item => parseInt(item.dataset.index));
-        compositions = compositions.filter((_, idx) => !indices.includes(idx));
-        localStorage.setItem("compositions", JSON.stringify(compositions));
-        location.reload();
-      }
+      // Annule la sélection
+      deleteMode = false;
+      deleteBtn.textContent = "Supprimer";
+      deleteBtn.classList.remove("active-delete");
+      document.body.classList.remove("delete-mode");
+      document.querySelectorAll(".grid-item.selected").forEach(el => el.classList.remove("selected"));
     }
   };
+
+  // Double clic pour confirmer la suppression
+  deleteBtn.addEventListener("dblclick", () => {
+    if (!deleteMode) return;
+    const selected = document.querySelectorAll(".grid-item.selected");
+    if (!selected.length) return;
+    if (confirm("Supprimer les éléments sélectionnés ?")) {
+      const indices = Array.from(selected).map(el => parseInt(el.dataset.index));
+      compositions = compositions.filter((_, i) => !indices.includes(i));
+      localStorage.setItem("compositions", JSON.stringify(compositions));
+      location.reload();
+    }
+  });
 });
