@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeModal = document.getElementById("closeModal");
   const exportModalBtn = document.getElementById("exportModalBtn");
   const deleteBtn = document.getElementById("deleteModeBtn");
+  const confirmBtn = document.getElementById("confirmDeleteBtn");
 
   let deleteMode = false;
   let compositions = JSON.parse(localStorage.getItem("compositions") || "[]");
@@ -13,6 +14,11 @@ document.addEventListener("DOMContentLoaded", () => {
     archiveGrid.innerHTML = "<p style='text-align:center'>Aucune composition sauvegardée</p>";
     return;
   }
+
+  const updateConfirmVisibility = () => {
+    const selected = document.querySelectorAll(".grid-item.selected");
+    confirmBtn.classList.toggle("hidden", selected.length === 0);
+  };
 
   compositions.forEach((comp, index) => {
     const div = document.createElement("div");
@@ -53,12 +59,12 @@ document.addEventListener("DOMContentLoaded", () => {
     div.addEventListener("click", () => {
       if (deleteMode) {
         div.classList.toggle("selected");
+        updateConfirmVisibility();
         return;
       }
 
       modalSvgContainer.innerHTML = comp.svg;
       const svgEl = modalSvgContainer.querySelector("svg");
-
       if (svgEl) {
         if (!svgEl.getAttribute("viewBox")) {
           const width = svgEl.getAttribute("width") || "1000";
@@ -81,9 +87,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       exportModalBtn.onclick = () => {
         const blob = new Blob([comp.svg], { type: "image/svg+xml" });
-        const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
-        link.href = url;
+        link.href = URL.createObjectURL(blob);
         link.download = `composition-${index + 1}.svg`;
         link.click();
       };
@@ -98,31 +103,26 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   deleteBtn.onclick = () => {
+    deleteMode = !deleteMode;
+    deleteBtn.textContent = deleteMode ? "Annuler" : "Supprimer";
+    deleteBtn.classList.toggle("active-delete", deleteMode);
+    document.body.classList.toggle("delete-mode", deleteMode);
+
     if (!deleteMode) {
-      deleteMode = true;
-      deleteBtn.textContent = "Annuler";
-      deleteBtn.classList.add("active-delete");
-      document.body.classList.add("delete-mode");
-    } else {
-      // Annule la sélection
-      deleteMode = false;
-      deleteBtn.textContent = "Supprimer";
-      deleteBtn.classList.remove("active-delete");
-      document.body.classList.remove("delete-mode");
       document.querySelectorAll(".grid-item.selected").forEach(el => el.classList.remove("selected"));
+      updateConfirmVisibility();
     }
   };
 
-  // Double clic pour confirmer la suppression
-  deleteBtn.addEventListener("dblclick", () => {
-    if (!deleteMode) return;
+  confirmBtn.onclick = () => {
     const selected = document.querySelectorAll(".grid-item.selected");
     if (!selected.length) return;
+
     if (confirm("Supprimer les éléments sélectionnés ?")) {
       const indices = Array.from(selected).map(el => parseInt(el.dataset.index));
       compositions = compositions.filter((_, i) => !indices.includes(i));
       localStorage.setItem("compositions", JSON.stringify(compositions));
       location.reload();
     }
-  });
+  };
 });
