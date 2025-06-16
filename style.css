@@ -352,3 +352,33 @@ html, body {
   width: 100vw;
   height: 100vh;
 }
+.archive-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.global-delete {
+  min-width: 100px;
+  margin-left: 10px;
+}
+
+.global-delete.active-delete {
+  background-color: #c0392b;
+}
+
+@media (max-width: 600px) {
+  .global-delete {
+    max-width: 120px;
+    flex: 0 0 auto;
+  }
+}
+@media (max-width: 600px) {
+  #panel {
+    width: auto;
+    max-width: 90vw;
+    left: 5vw;
+    top: 5vh;
+    padding: 10px;
+  }
+}
