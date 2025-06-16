@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Poésie Visuelle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://api.fontshare.com/v2/css?f[]=abc-diatype@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="panel" class="draggable">
+    <h2>Poésie Visuelle</h2>
+
+    <label>Texte :</label>
+    <textarea id="textInput">Écrit ici...</textarea>
+
+    <label>Mode :</label>
+    <select id="modeSelect">
+      <option value="souris">Souris</option>
+      <option value="forme">Forme aléatoire</option>
+    </select>
+
+    <label>Forme :</label>
+    <select id="shapeSelect">
+      <option value="serpent">Serpent</option>
+      <option value="spirale">Spirale</option>
+      <option value="cercle">Cercle</option>
+      <option value="rectangle">Rectangle</option>
+      <option value="vague">Vague</option>
+      <option value="coeur">Cœur</option>
+      <option value="etoile">Étoile</option>
+      <option value="infini">Infini</option>
+      <option value="zigzag">Zigzag</option>
+    </select>
+
+    <label>Couleur :</label>
+    <input type="color" id="textColor" value="#000000" />
+
+    <label>Taille du texte :</label>
+    <input type="number" id="fontSize" value="24" />
+
+    <label>Espacement lettres :</label>
+    <input type="number" id="letterSpacing" value="2" />
+
+    <button id="generateBtn">Générer</button>
+    <button id="clearBtn">Effacer</button>
+    <button id="exportBtn">Exporter SVG</button>
+    <button id="saveBtn">Sauvegarder</button>
+    <a href="archive.html" id="archiveLink">Voir l'archive</a>
+  </div>
+  <svg id="svgCanvas"
+       xmlns="http://www.w3.org/2000/svg"
+       xmlns:xlink="http://www.w3.org/1999/xlink"
+       preserveAspectRatio="xMidYMid meet"></svg>
+
+  <script src="poemj.js"></script>
+  <script>
+    function makeDraggable(el) {
+      let isDragging = false, offsetX, offsetY;
+      el.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        offsetX = e.clientX - el.offsetLeft;
+        offsetY = e.clientY - el.offsetTop;
+        document.addEventListener('mousemove', onMouseMove);
+      });
+      document.addEventListener('mouseup', () => {
+        isDragging = false;
+        document.removeEventListener('mousemove', onMouseMove);
+      });
+      function onMouseMove(e) {
+        if (!isDragging) return;
+        el.style.left = `${e.clientX - offsetX}px`;
+        el.style.top = `${e.clientY - offsetY}px`;
+      }
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      makeDraggable(document.getElementById('panel'));
+    });
+  </script>
+</body>
+</html>
