@@ -187,10 +187,7 @@ html, body {
   object-fit: contain;
 }
 
-body.delete-mode .grid-item {
-  outline: 2px dashed red;
-  opacity: 0.8;
-}
+
 .modal {
   position: fixed;
   inset: 0;
