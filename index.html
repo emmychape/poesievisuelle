@@ -53,12 +53,11 @@
 
   <svg id="svgCanvas"
        xmlns="http://www.w3.org/2000/svg"
-       xmlns:xlink="http://www.w3.org/1999/xlink"
-       preserveAspectRatio="xMidYMid meet"></svg>
+       preserveAspectRatio="xMidYMid meet"
+       viewBox="0 0 1000 1000"></svg>
 
   <script src="poemj.js"></script>
   <script>
-    // Rendre le panneau draggable
     function makeDraggable(el) {
       let isDragging = false, offsetX, offsetY;
       el.addEventListener('mousedown', (e) => {
@@ -77,19 +76,9 @@
         el.style.top = `${e.clientY - offsetY}px`;
       }
     }
+
     document.addEventListener('DOMContentLoaded', () => {
       makeDraggable(document.getElementById('panel'));
-
-      // Cacher bouton générer si mode souris
-      const generateBtn = document.getElementById("generateBtn");
-      const modeSelect = document.getElementById("modeSelect");
-
-      function updateGenerateVisibility() {
-        generateBtn.style.display = (modeSelect.value === "forme") ? "inline-block" : "none";
-      }
-
-      updateGenerateVisibility();
-      modeSelect.addEventListener("change", updateGenerateVisibility);
     });
   </script>
 </body>
