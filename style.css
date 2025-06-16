@@ -352,11 +352,6 @@ html, body {
   width: 100vw;
   height: 100vh;
 }
-.archive-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 
 .global-delete {
   min-width: 100px;
@@ -405,7 +400,72 @@ html, body {
   display: none;
 }
 
-.grid-item.selected {
-  border: 2px dashed red;
-  opacity: 0.8;
+/* === INDEX : Rendre le panneau responsive === */
+@media (max-width: 700px) {
+  #panel {
+    position: fixed;
+    width: 90vw;
+    left: 5vw;
+    top: 5vh;
+    padding: 15px;
+    z-index: 10;
+    max-height: 90vh;
+    overflow-y: auto;
+    background-color: white;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+  }
+
+  #panel button,
+  #panel input,
+  #panel select,
+  #panel textarea,
+  #panel a {
+    font-size: 16px;
+  }
+
+  #svgCanvas {
+    width: 100vw;
+    height: 100vh;
+  }
+}
+
+/* === ARCHIVE : garder les boutons sur une ligne, même sur mobile === */
+.archive-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+  padding: 10px 15px;
+}
+
+.archive-header .back-button {
+  flex: 0 0 auto;
+}
+
+.action-buttons {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.global-delete,
+.confirm-delete {
+  white-space: nowrap;
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+@media (max-width: 600px) {
+  .global-delete,
+  .confirm-delete {
+    font-size: 13px;
+    padding: 5px 10px;
+  }
+
+  .archive-header {
+    padding: 8px 10px;
+  }
 }
