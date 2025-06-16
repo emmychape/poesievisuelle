@@ -469,3 +469,39 @@ html, body {
     padding: 8px 10px;
   }
 }
+@media (max-width: 700px) {
+  #panel {
+    position: fixed;
+    width: 80vw;
+    max-width: 340px;
+    left: 5vw;
+    top: 5vh;
+    padding: 12px;
+    z-index: 10;
+    max-height: 90vh;
+    overflow-y: auto;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+
+  #panel label,
+  #panel textarea,
+  #panel input,
+  #panel select,
+  #panel button,
+  #panel a {
+    font-size: 16px;
+  }
+
+  #panel button,
+  #panel a {
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  #svgCanvas {
+    width: 100vw;
+    height: 100vh;
+  }
+}
